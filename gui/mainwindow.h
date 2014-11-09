@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QTime>
 #include <QDate>
+<<<<<<< HEAD
 #include <QWebView>
 
 #include "debugwindow.h"
@@ -31,6 +32,7 @@ private:
     void prepareGUI();//called after loading from file
     void prepareMap();//loads api key from API_KEY file and prepares map of city
     void updateMap();//refreshes map
+
     Ui::MainWindow *ui;
 
     debugWindow * debug;
