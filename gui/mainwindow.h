@@ -6,12 +6,12 @@
 #include <QFileDialog>
 #include <QTime>
 #include <QDate>
-<<<<<<< HEAD
 #include <QWebView>
 
 #include "debugwindow.h"
 
 #include "../src/graph/Network.h"
+#include "../src/db/DataBase.h"
 
 namespace Ui {
 class MainWindow;
