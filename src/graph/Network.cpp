@@ -49,11 +49,6 @@ Network::Network(DataBase& dataB){
 	this->nodes = std::set<Node *>();
 	this->solver = NULL;
 
-	this->edges = std::set<Edge *>();
-	this->nodes = std::set<Node *>();
-	this->solver = NULL;
-
-	std::vector<Edge*> edge_temp;
 
 	for(unsigned int i=0; i<dataB.stops.size(); i++){
 		Node* new_node = NULL;
@@ -62,11 +57,12 @@ Network::Network(DataBase& dataB){
 	}
 
 
-	for(unsigned int i=0; i<dataB.trips.size(); i++){
-		for(unsigned int stop_num=1; stop_num<dataB.trips[i].getStopSec().size(); stop_num++){
+	//for(unsigned int trip_num=0; trip_num<dataB.trips.size(); trip_num++){
+	unsigned int trip_num=0;
+		for(unsigned int stop_num=1; stop_num<dataB.trips[trip_num].getStopSec().size(); stop_num++){
 			//wylicz id dla rozważanego połączenia
-			unsigned int startNodeId = dataB.trips[i].getStopSec()[stop_num -1];
-			unsigned int endNodeId = dataB.trips[i].getStopSec()[stop_num];
+			unsigned int startNodeId = dataB.trips[trip_num].getStopSec()[stop_num -1];
+			unsigned int endNodeId = dataB.trips[trip_num].getStopSec()[stop_num];
 			unsigned int edgeId = calculateEdgeId(startNodeId, endNodeId);
 
 			if( !getEdge(edgeId) ){
@@ -74,13 +70,38 @@ Network::Network(DataBase& dataB){
 				Node* startNode = getNode(startNodeId);
 				Node* endNode = getNode(endNodeId);
 				Edge* newEdge = new Edge(edgeId,startNode,endNode);
+				//porównanie każdy każdy aż nie znajde pierwszego większego czasu
+				for(unsigned int i = 0; i< dataB.stopTimesTable[trip_num][stop_num -1].size(); i++){
+					for(unsigned int j = 0; j< dataB.stopTimesTable[trip_num][stop_num].size(); j++){
 
-				std::vector<Time> startNodeStopTimes;
-				std::vector<Time> endNodeStopTimes;
+						if(dataB.stopTimesTable[trip_num][stop_num-1][i] < dataB.stopTimesTable[trip_num][stop_num][j]){
+							newEdge->addConnection(dataB.stopTimesTable[trip_num][stop_num-1][i], dataB.stopTimesTable[trip_num][stop_num][j],trip_num);
+							break;
+						}
+					}
+				}
+				std::cout<<"edge id: "<<edgeId<<" from: "<<startNodeId<<" to: "<<endNodeId<<std::endl;
+				for(unsigned int i=0; i<newEdge->connections.size();i++){
+					std::cout<<"departure: "<<newEdge->connections[i].getDepartureTime()<<" arrival: "<<newEdge->connections[i].getArrivalTime()<<" trip: "<<newEdge->connections[i].getTripID()<<std::endl;
+				}
+				std::cerr<<"edge id: "<<edgeId<<" from: "<<startNodeId<<" to: "<<endNodeId<<std::endl;
+				this->addEdge(newEdge);
 			}
 		}
-	}
+	//}
 
+/*
+	//debug
+	for(unsigned int stop_num=1; stop_num<dataB.trips[trip_num].getStopSec().size(); stop_num++){
+		unsigned int startNodeId = dataB.trips[trip_num].getStopSec()[stop_num -1];
+		unsigned int endNodeId = dataB.trips[trip_num].getStopSec()[stop_num];
+		unsigned int edgeId = calculateEdgeId(startNodeId, endNodeId);
+		Edge* newEdge = getEdge(edgeId);
+		std::cout<<"from: "<<stop_num-1<<" to: "<<stop_num<<std::endl;
+		for(int i=0; i<newEdge->connections.size();i++){
+			std::cout<<"departure: "<<newEdge->connections[i].getDepartureTime()<<" arrival: "<<newEdge->connections[i].getDepartureTime()<<" trip: "<<newEdge->connections[i].getTripID()<<std::endl;
+		}
+	}*/
 
 	this->incidenceMatrix = NULL;
 	this->createIncidenceMatrix();
@@ -216,7 +237,7 @@ Node * Network::getNodeCloseToPos(double lat, double lon) const {
 }
 
 unsigned int Network::calculateEdgeId(unsigned int startId, unsigned int endId){
-	return startId + 2000*endId;
+	return startId + (this->nodes.size()+1)*endId;
 }
 
 
