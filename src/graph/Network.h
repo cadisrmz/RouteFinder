@@ -24,7 +24,7 @@ http://open.spotify.com/track/0QervLYxa3WBLkSTLkcGNw * Network.h
  * main class, contains information
  * about nodes and edges between them.
  * Should be created from file containing
- * data in GTFS or other format. //todo
+ * data in GTFS or other format.
  * loadFromFile method should load "db/db.ext" file
  * and save it to inner variables.
  */
@@ -40,7 +40,7 @@ public:
 	 * Network object constructor in which {@link Network::loadFromFile()} method is being called.
 	 * @param f Name of file from which database is loaded.
 	 */
-	Network(std::string f);
+	//Network(std::string f);
 
 	/**
 	 * Destructs all objects in Network and itself.
@@ -51,12 +51,6 @@ public:
 	 * Creates Network from database
 	 */
 	Network(DataBase& dataB);
-
-	/**
-	 * Load database entries from given file.
-	 * @param f Filename from which database is being loaded.
-	 */
-	void loadFromFile(std::string f);
 
 	/**
 	 * Set solved used in {@link Network::findRouteBetween()} method.
@@ -74,7 +68,7 @@ public:
 	Route * findRouteBetween(const Node * start, const Node * end, const unsigned int maxSwitches);
 
 	/**
-	 * This function is necessary for GUI. //todo
+	 * This function is necessary for GUI.
 	 * @return Returns some kind of stl container in which
 	 * all nodes are stored in alphabetical order.
 	 */
@@ -137,10 +131,19 @@ private:
 	 * @return Returns pointer to Node being closest to given geographic position.
 	 */
 	Node * getNodeCloseToPos(double latitude, double longtitude) const; //returns node close do desired position
+	void createIncidenceMatrix();
+
+
 
 	unsigned int calculateEdgeId(unsigned int startId, unsigned int endId);
 
 	Solver * solver;
+
+	/**
+	 * two dimensional bool array containing data about connections
+	 * for matrix[i][j], true means there is connection between node.id == i to node.id ==j.
+	 */
+	bool ** incidenceMatrix;
 };
 
 #endif /* SRC_NETWORK_H_ */

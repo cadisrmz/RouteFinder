@@ -12,8 +12,26 @@ Network::Network() {
 	this->nodes = std::set<Node *>();
 
 	this->solver = NULL;
+
+	this->incidenceMatrix = NULL;
 }
 
+void Network::createIncidenceMatrix() {
+	unsigned int numNodes = this->nodes.size();
+
+	if(numNodes == 0)
+		return;
+
+	this->incidenceMatrix = new bool*[numNodes];
+	for (unsigned int i = 0; i < numNodes; i++) {
+		this->incidenceMatrix[i] = new bool[numNodes];
+	}
+	for (Edge* e : this->edges)
+	{
+		this->incidenceMatrix[e->getStartNode()->getID()][e->getEndNode()->getID()] = true;
+	}
+}
+/*
 Network::Network(std::string filename) {
 	this->edges = std::set<Edge *>();
 	this->nodes = std::set<Node *>();
@@ -21,19 +39,46 @@ Network::Network(std::string filename) {
 	this->solver = NULL;
 
 	this->loadFromFile(filename);
+
+	this->incidenceMatrix = NULL;
+	this->createIncidenceMatrix();
+}*/
+
+Network::Network(DataBase& dataB){
+	this->edges = std::set<Edge *>();
+	this->nodes = std::set<Node *>();
+	this->solver = NULL;
+
+	Node* temp = NULL;
+
+	for(unsigned int i=0; i<dataB.stops.size(); i++){
+		temp = new Node(dataB.stops[i].getId(),dataB.stops[i].getName(),dataB.stops[i].getLat(), dataB.stops[i].getLng());
+
+		if(temp) this->addNode(temp);
+	}
+
+	this->incidenceMatrix = NULL;
+	this->createIncidenceMatrix();
 }
 
 Network::~Network() {
-	//todo
 
 	for(Node* e: this->nodes){
 		delete e;
 	}
 
-	delete this->solver;
-}
+	if(this->incidenceMatrix != NULL)
+	{
+		unsigned int nodes = this->nodes.size();
+		for(unsigned int i = 0; i < nodes; i++)
+		{
+			if(this->incidenceMatrix[i] != NULL)
+				delete [] this->incidenceMatrix[i];
+		}
+		delete [] this->incidenceMatrix;
+	}
 
-void Network::loadFromFile(std::string filename) {
+	delete this->solver;
 }
 
 void Network::setSover(Solver * s) {
@@ -50,13 +95,14 @@ Route* Network::findRouteBetween(const Node * start, const Node * end, const uns
 
 bool Network::isEdgeBetween(const Node * start, const Node * end) const {
 
-	for(Edge * e: this->edges)
+	/*for(Edge * e: this->edges)
 	{
 		if(*(e->getStartNode()) == *start && *(e->getEndNode()) == *end)
 			return true;
 	}
 
-	return false;
+	return false;*/
+	return this->incidenceMatrix[start->getID()][end->getID()];
 }
 
 bool Network::addNode(Node * n) {
@@ -143,12 +189,14 @@ Node * Network::getNodeCloseToPos(double lat, double lon) const {
 
 	return closestNode;
 }
+/*
 
 unsigned int Network::calculateEdgeId(unsigned int startId, unsigned int endId){
 	return startId + 2000*endId;
-}
-
+}*/
+/*
 Network::Network(DataBase& dataB){
+
 	this->edges = std::set<Edge *>();
 	this->nodes = std::set<Node *>();
 	this->solver = NULL;
@@ -179,13 +227,8 @@ Network::Network(DataBase& dataB){
 				std::vector<Time> startNodeStopTimes;
 				std::vector<Time> endNodeStopTimes;
 			}
-
-
-
-
 		}
 	}
-
-}
+}*/
 
 
