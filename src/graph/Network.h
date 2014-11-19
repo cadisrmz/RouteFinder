@@ -138,6 +138,8 @@ private:
 	 */
 	Node * getNodeCloseToPos(double latitude, double longtitude) const; //returns node close do desired position
 
+	unsigned int calculateEdgeId(unsigned int startId, unsigned int endId);
+
 	Solver * solver;
 };
 
