@@ -20,6 +20,8 @@ http://open.spotify.com/track/0QervLYxa3WBLkSTLkcGNw * Network.h
 #include "../algorithm/Solver.h"
 #include "../db/DataBase.h"
 
+class Solver; //forward declaration
+
 /**
  * main class, contains information
  * about nodes and edges between them.
@@ -82,16 +84,41 @@ public:
 	 */
 	friend std::ostream& operator<<(std::ostream& s, const Network& n);
 
-private:
-	std::set<Node *> nodes;
-	std::set<Edge *> edges;
-
 	/**
 	 * @param start Pointer to starting Node.
 	 * @param end Pointer to ending Node.
 	 * @return True if Edge from start to end exists in graph, false otherwise.
 	 */
 	bool isEdgeBetween(const Node * start, const Node * end) const; //returns true if edge between two nodes exists
+
+	/**
+	 *	@param id Id of desired Node.
+	 *	@return Pointer to desired Node if exists in graph, NULL otherwise.
+	 */
+	Node * getNode(unsigned int id) const; //get Node by id
+
+	/**
+	 *	@param id Id of desired Edge.
+	 *	@return Pointer to desired Edge if exists in graph, NULL otherwise.
+	 */
+	Edge * getEdge(unsigned int id) const; //get Edge by id
+
+	/**
+	 * @param n Pointer to given Node.
+	 * @return std::list of all Edges starting in given Node.
+	 */
+	std::list<Edge *> getEdgesForNode(const Node * n) const;
+
+	/**
+	 * @param latitude Given latitude
+	 * @param longtitude Given longtitude.
+	 * @return Returns pointer to Node being closest to given geographic position.
+	 */
+	Node * getNodeCloseToPos(double latitude, double longtitude) const; //returns node close do desired position
+
+private:
+	std::set<Node *> nodes;
+	std::set<Edge *> edges;
 
 	/**
 	 * Adds given Node to graph.
@@ -107,33 +134,7 @@ private:
 	 */
 	bool addEdge(Edge * e); //adds Edge if not exists
 
-	/**
-	 *	@param id Id of desired Node.
-	 *	@return Pointer to desired Node if exists in graph, NULL otherwise.
-	 */
-	Node * getNode(unsigned int id); //get Node by id
-
-	/**
-	 *	@param id Id of desired Edge.
-	 *	@return Pointer to desired Edge if exists in graph, NULL otherwise.
-	 */
-	Edge * getEdge(unsigned int id); //get Edge by id
-
-	/**
-	 * @param n Pointer to given Node.
-	 * @return std::list of all Edges starting in given Node.
-	 */
-	std::list<Edge *> getEdgesForNode(const Node * n) const;
-
-	/**
-	 * @param latitude Given latitude
-	 * @param longtitude Given longtitude.
-	 * @return Returns pointer to Node being closest to given geographic position.
-	 */
-	Node * getNodeCloseToPos(double latitude, double longtitude) const; //returns node close do desired position
 	void createIncidenceMatrix();
-
-
 
 	unsigned int calculateEdgeId(unsigned int startId, unsigned int endId);
 

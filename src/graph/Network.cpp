@@ -146,7 +146,7 @@ bool Network::addEdge(Edge* e) {
 	return true;
 }
 
-Node * Network::getNode(unsigned int id) {
+Node * Network::getNode(unsigned int id) const {
 	if(this->nodes.size() <= id)
 		return NULL;
 
@@ -162,7 +162,7 @@ Node * Network::getNode(unsigned int id) {
 	return *it;
 }
 
-Edge* Network::getEdge(unsigned int id) {
+Edge* Network::getEdge(unsigned int id) const {
 	if(this->edges.size() <= id)
 			return NULL;
 
