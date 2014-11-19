@@ -136,6 +136,8 @@ private:
 
 	void createIncidenceMatrix();
 
+	unsigned int calculateEdgeId(unsigned int startId, unsigned int endId);
+
 	Solver * solver;
 
 	/**
