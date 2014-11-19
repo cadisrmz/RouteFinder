@@ -49,13 +49,38 @@ Network::Network(DataBase& dataB){
 	this->nodes = std::set<Node *>();
 	this->solver = NULL;
 
-	Node* temp = NULL;
+	this->edges = std::set<Edge *>();
+	this->nodes = std::set<Node *>();
+	this->solver = NULL;
+
+	std::vector<Edge*> edge_temp;
 
 	for(unsigned int i=0; i<dataB.stops.size(); i++){
-		temp = new Node(dataB.stops[i].getId(),dataB.stops[i].getName(),dataB.stops[i].getLat(), dataB.stops[i].getLng());
-
-		if(temp) this->addNode(temp);
+		Node* new_node = NULL;
+		new_node = new Node(dataB.stops[i].getId(),dataB.stops[i].getName(),dataB.stops[i].getLat(), dataB.stops[i].getLng());
+		if(new_node) this->addNode(new_node);
 	}
+
+
+	for(unsigned int i=0; i<dataB.trips.size(); i++){
+		for(unsigned int stop_num=1; stop_num<dataB.trips[i].getStopSec().size(); stop_num++){
+			//wylicz id dla rozważanego połączenia
+			unsigned int startNodeId = dataB.trips[i].getStopSec()[stop_num -1];
+			unsigned int endNodeId = dataB.trips[i].getStopSec()[stop_num];
+			unsigned int edgeId = calculateEdgeId(startNodeId, endNodeId);
+
+			if( !getEdge(edgeId) ){
+				//jeżeli takiej krawędzi jeszcze nie było
+				Node* startNode = getNode(startNodeId);
+				Node* endNode = getNode(endNodeId);
+				Edge* newEdge = new Edge(edgeId,startNode,endNode);
+
+				std::vector<Time> startNodeStopTimes;
+				std::vector<Time> endNodeStopTimes;
+			}
+		}
+	}
+
 
 	this->incidenceMatrix = NULL;
 	this->createIncidenceMatrix();
@@ -189,46 +214,9 @@ Node * Network::getNodeCloseToPos(double lat, double lon) const {
 
 	return closestNode;
 }
-/*
 
 unsigned int Network::calculateEdgeId(unsigned int startId, unsigned int endId){
 	return startId + 2000*endId;
-}*/
-/*
-Network::Network(DataBase& dataB){
-
-	this->edges = std::set<Edge *>();
-	this->nodes = std::set<Node *>();
-	this->solver = NULL;
-
-	std::vector<Edge*> edge_temp;
-
-	for(unsigned int i=0; i<dataB.stops.size(); i++){
-		Node* new_node = NULL;
-		new_node = new Node(dataB.stops[i].getId(),dataB.stops[i].getName(),dataB.stops[i].getLat(), dataB.stops[i].getLng());
-
-		if(new_node) this->addNode(new_node);
-	}
-
-
-	for(unsigned int i=0; i<dataB.trips.size(); i++){
-		for(unsigned int stop_num=1; stop_num<dataB.trips[i].getStopSec().size(); stop_num++){
-			//wylicz id dla rozważanego połączenia
-			unsigned int startNodeId = dataB.trips[i].getStopSec()[stop_num -1];
-			unsigned int endNodeId = dataB.trips[i].getStopSec()[stop_num];
-			unsigned int edgeId = calculateEdgeId(startNodeId, endNodeId);
-
-			if( !getEdge(edgeId) ){
-				//jeżeli takiej krawędzi jeszcze nie było
-				Node* startNode = getNode(startNodeId);
-				Node* endNode = getNode(endNodeId);
-				Edge* newEdge = new Edge(edgeId,startNode,endNode);
-
-				std::vector<Time> startNodeStopTimes;
-				std::vector<Time> endNodeStopTimes;
-			}
-		}
-	}
-}*/
+}
 
 
