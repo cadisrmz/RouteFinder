@@ -13,6 +13,11 @@
 #include "../src/graph/Network.h"
 #include "../src/db/DataBase.h"
 
+#include "../src/algorithm/Solver.h"
+#include "../src/algorithm/BSF.h"
+#include "../src/algorithm/DSF.h"
+#include "../src/algorithm/SimAnnealingAlg.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -28,10 +33,12 @@ public:
 private:
 
     void setupActions();
+    void loadAlgorithms();
 
     void prepareGUI();//called after loading from file
     void prepareMap();//loads api key from API_KEY file and prepares map of city
     void updateMap();//refreshes map
+
 
     Ui::MainWindow *ui;
 
@@ -40,6 +47,8 @@ private:
     Network * network;
 
     QString apiKey;
+
+    std::vector<Solver*> solvers;
 
 private slots:
     void manageDebugWindow();
@@ -51,6 +60,7 @@ private slots:
     void loadGTFS();
     void loadJSON();
     void loadMulJSON();
+    void loadSavedDB();
 
     void showRouteOnMap(Route * r);
 };
