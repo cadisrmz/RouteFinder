@@ -9,6 +9,7 @@
 #include <QWebView>
 
 #include "debugwindow.h"
+#include "settings.h"
 
 #include "../src/graph/Network.h"
 #include "../src/db/DataBase.h"
@@ -33,7 +34,6 @@ public:
 private:
 
     void setupActions();
-    void loadAlgorithms();
 
     void prepareGUI();//called after loading from file
     void prepareMap();//loads api key from API_KEY file and prepares map of city
@@ -44,11 +44,11 @@ private:
 
     debugWindow * debug;
 
+    Settings * settings;
+
     Network * network;
 
     QString apiKey;
-
-    std::vector<Solver*> solvers;
 
 private slots:
     void manageDebugWindow();
