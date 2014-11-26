@@ -34,7 +34,11 @@ SOURCES += main.cpp\
     ../src/graph/Network.cpp \
     ../src/graph/Node.cpp \
     ../src/graph/Route.cpp \
-    ../src/jsoncpp/jsoncpp.cpp
+    ../src/jsoncpp/jsoncpp.cpp \
+    settings.cpp \
+    params/paramssimann.cpp \
+    params/paramsbsf.cpp \
+    params/paramsdsf.cpp
 
 HEADERS  += mainwindow.h \
     debugwindow.h \
@@ -58,7 +62,15 @@ HEADERS  += mainwindow.h \
     ../src/graph/Route.h \
     ../src/graph/TransportType.h \
     ../src/jsoncpp/json/json-forwards.h \
-    ../src/jsoncpp/json/json.h
+    ../src/jsoncpp/json/json.h \
+    settings.h \
+    params/paramssimann.h \
+    params/paramsbsf.h \
+    params/paramsdsf.h
 
 FORMS    += mainwindow.ui \
-    debugwindow.ui
+    debugwindow.ui \
+    settings.ui \
+    params/paramssimann.ui \
+    params/paramsbsf.ui \
+    params/paramsdsf.ui
