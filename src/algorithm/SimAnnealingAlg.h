@@ -30,10 +30,12 @@ public:
 	 * @param n Pointer to Network in which Route is being searched for.
 	 * @return Pointer to found Route, NULL if no route can be found.
 	 */
-	virtual Route* solve(const Network * n, Node * start, Node * end);
-	void setParams(double Tstart, double Tend, unsigned int k, double alpha, Time t);
+	virtual Route* solve(const Network * n, Node * start, Node * end, Time t);
+	void setParams(double Tstart, double Tend, unsigned int k, double alpha);
 
 	virtual const std::string & getName() const;
+
+	std::vector<unsigned> getWeights() const;
 
 private:
 	static const std::string name;
@@ -43,8 +45,7 @@ private:
 	double Tend;
 	unsigned int k;
 	double alpha;
-	Time t;
-
+	std::vector<unsigned> weights;
 
 	double getRandom(unsigned i = 1);
 

@@ -26,21 +26,23 @@ SimAnnealingAlg::~SimAnnealingAlg()
 
 }
 
-Route* SimAnnealingAlg::solve(const Network * n, Node * start, Node * end) {
+Route* SimAnnealingAlg::solve(const Network * n, Node * start, Node * end, Time time) {
 
 	//k - number of iteration
 	//Tstart - starting temperature
 	//Tend - ending temperature
 	//T - current temperature
 	//alfa - T = alfa * T for every iteration
+	this->weights.clear();
 
+	Time t = time;
 	double T = this->Tstart;
 	Route * currentSolution = this->getFistSolution(n, start, end);
 	unsigned int currentWeight = currentSolution->getWeight(t);
 	while(T>this->Tend){
 		for(unsigned int i=0; i<k; i++){	//repeat k times
 			Route * newR =this->getRouteInSurroundings(n,currentSolution);		//get new solution and new weight
-			unsigned int newWeight = newR->getWeight(this->t);
+			unsigned int newWeight = newR->getWeight(t);
 			int delta = int(newWeight) - int(currentWeight);
 
 			if(delta <0){	//if solution is better tha current
@@ -54,6 +56,7 @@ Route* SimAnnealingAlg::solve(const Network * n, Node * start, Node * end) {
 			}
 		}
 		T *= this->alpha;
+		this->weights.push_back(currentWeight);
 	}
 
 	return currentSolution;
@@ -67,16 +70,19 @@ double SimAnnealingAlg::getRandom(unsigned i) {
 	return i * this->distribution(this->generator);
 }
 
-void SimAnnealingAlg::setParams(double Tstart, double Tend, unsigned int k, double alpha, Time t) {
+void SimAnnealingAlg::setParams(double Tstart, double Tend, unsigned int k, double alpha) {
 	this->Tstart = Tstart;
 	this->Tend = Tend;
 	this->k = k;
 	this->alpha = alpha;
-	this->t = t;
+}
+
+std::vector<unsigned> SimAnnealingAlg::getWeights() const {
+	return this->weights;
 }
 
 Route* SimAnnealingAlg::getFistSolution(const Network* n, Node* start, Node* end) {
-	std::cerr << "getFistSolution called" << std::endl;
+//	std::cerr << "getFistSolution called" << std::endl;
 
 	Node * currentNode = start;
 //	Route * route = new Route;
@@ -159,7 +165,7 @@ Route* SimAnnealingAlg::getFistSolution(const Network* n, Node* start, Node* end
 //			std::cerr << " closest node edge is null" << std::endl;
 			if(stack.size() == 0)
 			{
-				std::cout << " stack is empty, abort" << std::endl;
+//				std::cout << " stack is empty, abort" << std::endl;
 				return NULL;
 			}
 			ignored.push_back(currentNode);
@@ -177,7 +183,7 @@ Route* SimAnnealingAlg::getFistSolution(const Network* n, Node* start, Node* end
 	for(Edge * e: route) r->addEdge(e);
 	if(r->validate())
 	{
-		std::cerr << "getFistSolution finished" << std::endl;
+//		std::cerr << "getFistSolution finished" << std::endl;
 		return r;
 	}
 	std::cerr << "Created route is invalid";
@@ -186,7 +192,7 @@ Route* SimAnnealingAlg::getFistSolution(const Network* n, Node* start, Node* end
 }
 
 Route* SimAnnealingAlg::getRouteInSurroundings(const Network* net, Route* r) {
-	std::cerr << "getRouteInSurroundings called" << std::endl;
+//	std::cerr << "getRouteInSurroundings called" << std::endl;
 
 	//select two nodes and recreate connection between them.
 
@@ -316,7 +322,7 @@ Route* SimAnnealingAlg::getRouteInSurroundings(const Network* net, Route* r) {
 //				std::cout << "t1013" << std::endl;
 				Route * newRoute = new Route(*r);
 //				std::cout << "t1014" << std::endl;
-				std::cout << *newRoute << std::endl << std::cout << *newR << std::endl;
+//				std::cout << *newRoute << std::endl << std::cout << *newR << std::endl;
 				if(newRoute->switchRoute(*newR) && newRoute->validate())
 				{
 //					std::cout << "t1015" << std::endl;

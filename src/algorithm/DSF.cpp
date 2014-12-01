@@ -22,7 +22,7 @@ DsfAlg::~DsfAlg(){
 
 }
 
-Route* DsfAlg::solve(const Network * n,Node * start,Node * end){
+Route* DsfAlg::solve(const Network * n,Node * start,Node * end, Time t){
 
 	std::stack<unsigned int> S;
 	unsigned int* P;
@@ -60,12 +60,12 @@ Route* DsfAlg::solve(const Network * n,Node * start,Node * end){
 	std::vector<unsigned int> resultVector;
 
 	while( v != startNodeId){
-		std::cerr<<v<<" "<<n->getNode(v)->getName()<<std::endl;
+//		std::cerr<<v<<" "<<n->getNode(v)->getName()<<std::endl;
 		resultVector.push_back(v);
 		v = P[v];
 	}
 	resultVector.push_back(v);
-	std::cerr<<v<<" "<<n->getNode(v)->getName()<<std::endl;
+//	std::cerr<<v<<" "<<n->getNode(v)->getName()<<std::endl;
 
 	/*
 	Route* resultRoute;
