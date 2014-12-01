@@ -19,6 +19,8 @@
 #include "../src/algorithm/DSF.h"
 #include "../src/algorithm/SimAnnealingAlg.h"
 
+#include "qcustomplot/qcustomplot.h"
+
 namespace Ui {
 class MainWindow;
 }
