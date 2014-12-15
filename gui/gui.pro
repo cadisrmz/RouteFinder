@@ -39,7 +39,9 @@ SOURCES += main.cpp\
     params/paramssimann.cpp \
     params/paramsbsf.cpp \
     params/paramsdsf.cpp \
-    qcustomplot/qcustomplot.cpp
+    ../src/algorithm/BSFR.cpp \
+    ../src/algorithm/Solver.cpp \
+    ../src/tester/Tester.cpp
 
 HEADERS  += mainwindow.h \
     debugwindow.h \
@@ -68,7 +70,8 @@ HEADERS  += mainwindow.h \
     params/paramssimann.h \
     params/paramsbsf.h \
     params/paramsdsf.h \
-    qcustomplot/qcustomplot.h
+    ../src/algorithm/BSFR.h \
+    ../src/tester/Tester.h
 
 FORMS    += mainwindow.ui \
     debugwindow.ui \
